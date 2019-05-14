@@ -28,7 +28,7 @@ public class VehicleService {
 		vehicleRepository.save(vehicle);
 	}
 	
-	public void updateVehicle(String vin, Vehicle vehicle) {
+	public void updateVehicle(Vehicle vehicle) {
 		vehicleRepository.save(vehicle);
 	}
 	
