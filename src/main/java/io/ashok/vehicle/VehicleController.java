@@ -3,6 +3,7 @@ package io.ashok.vehicle;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,17 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class VehicleController {
+	
+	private final static Logger logger = Logger.getLogger(VehicleController.class);
 
 	@Autowired
 	private VehicleService vehicleService;
 
 	@RequestMapping("/vehicles")
 	public List<Vehicle> getAllVehicles() {
+		logger.debug("inside getvehicles()");
 		return vehicleService.getAllVehicles();
 	}
 
 	@RequestMapping("/vehicles/{vin}")
 	public Optional<Vehicle> getVehicle(@PathVariable String vin) {
+		
 		return vehicleService.getVehicle(vin);
 	}
 
@@ -33,7 +38,11 @@ public class VehicleController {
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}")
 	public void updateVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {
-		if (this.getVehicle(vin) != null) {
+		logger.debug("calling VehicleController.updateVehicle() method."); 
+		Optional<Vehicle> veh = this.getVehicle(vin);
+		logger.debug("veh: "+veh);
+		
+		if (veh.isPresent()) {
 			vehicle.setVin(vin);
 			vehicleService.updateVehicle(vehicle);
 		}
@@ -48,10 +57,11 @@ public class VehicleController {
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{status}")
 	public void updateVehicleStatus(@PathVariable String vin,
 			@PathVariable Status status) {
-		Vehicle vehicle = new Vehicle();//(Vehicle) this.getVehicle(vin) ;
-		if (vehicle != null) {
-			vehicle.setStatus(status);
-			vehicleService.updateVehicle(vehicle);
+		Optional<Vehicle> vehicle = this.getVehicle(vin);
+		if (vehicle.isPresent()) {
+			Vehicle veh = vehicle.get();
+			veh.setStatus(status);
+			vehicleService.updateVehicle(veh);
 		}
 	}
 
