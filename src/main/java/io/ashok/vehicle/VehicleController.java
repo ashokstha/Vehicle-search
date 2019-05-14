@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,9 +55,16 @@ public class VehicleController {
 	 * else display error message
 	 */
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{status}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{statusValue}")
 	public void updateVehicleStatus(@PathVariable String vin,
-			@PathVariable Status status) {
+			@PathVariable String statusValue) {
+		
+		Status status = StringToEnum.convert(statusValue);
+		if (status==null) {
+			logger.debug("updateVehicleStatus() => Invalid Status.");
+			return;
+		}
+		
 		Optional<Vehicle> vehicle = this.getVehicle(vin);
 		if (vehicle.isPresent()) {
 			Vehicle veh = vehicle.get();
