@@ -7,7 +7,9 @@ import javax.persistence.Id;
 public class Vehicle {
 
 	@Id
+	//@GeneratedValue(strategy=GenerationType.AUTO)
 	String vin;
+	
 	Make make;
 	String model;
 	String modelYear;
