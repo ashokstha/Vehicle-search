@@ -16,7 +16,7 @@ public class Vehicle {
 
 	@Id
 	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid2")
+	@GenericGenerator(name = "uuid", strategy = "uuid")
 	String vin;
 
 	Make make;
@@ -27,7 +27,7 @@ public class Vehicle {
 	Date soldDate;
 	Date createdDate;
 	float price;
-	
+
 	private final static Logger logger = Logger.getLogger(VehicleController.class);
 
 	public String getVin() {
@@ -124,7 +124,9 @@ public class Vehicle {
 
 	public Vehicle(String vin, Make make, String model, String modelYear, String description, Status status,
 			String soldDate, String createdDate, float price) {
+
 		super();
+
 		this.vin = vin;
 		this.make = make;
 		this.model = model;
@@ -132,7 +134,6 @@ public class Vehicle {
 		this.description = description;
 		this.status = status;
 		this.price = price;
-		
 		this.setCreatedDate(createdDate);
 		this.setSoldDate(soldDate);
 	}

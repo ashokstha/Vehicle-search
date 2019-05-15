@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.ashok.util.RandomString;
 import io.ashok.util.StringToEnum;
 
 @RestController
@@ -33,6 +34,7 @@ public class VehicleController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/vehicles")
 	public void addVehicle(@RequestBody Vehicle vehicle) {
+		vehicle.setVin(RandomString.getALphaNum(17));
 		vehicleService.addVehicle(vehicle);
 	}	
 
