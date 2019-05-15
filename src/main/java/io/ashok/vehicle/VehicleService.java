@@ -46,4 +46,37 @@ public class VehicleService {
 		return vehicles;
 	}
 
+	public List<Vehicle> searchByModel(String model) {
+		List<Vehicle> vehicles = new ArrayList<>();
+		vehicleRepository.findAll().forEach(v -> {
+			if (v.getModel().equals(model)) {
+				vehicles.add(v);
+			}
+		});
+
+		return vehicles;
+	}
+
+	public List<Vehicle> searchByYear(String year) {
+		List<Vehicle> vehicles = new ArrayList<>();
+		vehicleRepository.findAll().forEach(v -> {
+			if (v.getModelYear().equals(year)) {
+				vehicles.add(v);
+			}
+		});
+
+		return vehicles;
+	}
+
+	public List<Vehicle> searchByPrice(String price) {
+		List<Vehicle> vehicles = new ArrayList<>();
+		vehicleRepository.findAll().forEach(v -> {
+			if (v.getPrice() == Float.parseFloat(price)) {
+				vehicles.add(v);
+			}
+		});
+
+		return vehicles;
+	}
+
 }

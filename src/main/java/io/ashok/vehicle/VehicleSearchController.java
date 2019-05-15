@@ -19,7 +19,7 @@ public class VehicleSearchController {
 	@Autowired
 	private VehicleService vehicleService;
 
-	@RequestMapping(method=RequestMethod.GET, value="/vehicles/q/{makeValue}")
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/make/{makeValue}")
 	public List<Vehicle> searchVehicleByMake(@PathVariable String makeValue){
 		
 		Make make = StringToEnum.convertMake(makeValue);
@@ -29,6 +29,30 @@ public class VehicleSearchController {
 		}
 		
 		return vehicleService.searchByMake(make);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/model/{model}")
+	public List<Vehicle> searchVehicleByModel(@PathVariable String model){		
+		return vehicleService.searchByModel(model);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/year/{year}")
+	public List<Vehicle> searchVehicleByYear(@PathVariable String year){		
+		return vehicleService.searchByYear(year);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/price/{price}")
+	public List<Vehicle> searchVehicleByPrice(@PathVariable String price){		
+		return vehicleService.searchByPrice(price);
 	}
 
 }
