@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.ashok.VehicleApplication;
+import io.ashok.exception.ValidationException;
+import io.ashok.exception.VehicleNotFoundException;
 import io.ashok.util.StringToEnum;
 
 @Service
@@ -19,6 +21,12 @@ public class VehicleService {
 	@Autowired
 	private VehicleRepository vehicleRepository;
 
+	private void validateVehicle(final Vehicle vehicle) {
+		if (vehicle == null) {
+			throw new ValidationException("Invalid Vehicle info for persistence.");
+		}
+	}
+
 	public List<Vehicle> getAllVehicles() {
 		List<Vehicle> vehicles = new ArrayList<>();
 		vehicleRepository.findAll().forEach(vehicles::add);
@@ -26,20 +34,22 @@ public class VehicleService {
 	}
 
 	public Optional<Vehicle> getVehicle(String vin) {
-		return vehicleRepository.findById(vin);
+		Optional<Vehicle> vehicle = vehicleRepository.findById(vin);
+		if (!vehicle.isPresent()) {
+			throw new VehicleNotFoundException("Error! Vehicle not found in the system.");
+		}
+		
+		return vehicle;
 	}
 
-	/*
-	 * Add validations for vehicle before saving
-	 */
 	public void addVehicle(Vehicle vehicle) {
+		validateVehicle(vehicle);
 		vehicleRepository.save(vehicle);
 	}
 
-	/*
-	 * TODO: test modules
-	 */
 	public void updateVehicle(Vehicle vehicle, String vin) {
+		validateVehicle(vehicle);
+		
 		Optional<Vehicle> veh = this.getVehicle(vin);
 
 		if (veh.isPresent() && veh.get().getStatus() == Status.PENDING) {
@@ -48,10 +58,6 @@ public class VehicleService {
 		}
 	}
 
-	/*
-	 * TODO: test module Delete a vehicle if the status is pending state else cannot
-	 * delete vehicle
-	 */
 	public void deleteVehicle(String vin) {
 		Optional<Vehicle> vehicle = this.getVehicle(vin);
 		if (vehicle.isPresent() && vehicle.get().getStatus() == Status.PENDING) {
