@@ -5,21 +5,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.jboss.logging.Logger;
 
 @Entity
 public class Vehicle {
 
 	@Id
-	@GeneratedValue(generator = "uuid")
-	@GenericGenerator(name = "uuid", strategy = "uuid")
-	String id;
-	
 	String vin;
+	
 	Make make;
 	String model;
 	String modelYear;
@@ -30,14 +25,6 @@ public class Vehicle {
 	float price;
 
 	private final static Logger logger = Logger.getLogger(VehicleController.class);
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
 
 	public String getVin() {
 		return vin;
@@ -131,12 +118,11 @@ public class Vehicle {
 
 	}
 
-	public Vehicle(String id, String vin, Make make, String model, String modelYear, String description, Status status,
+	public Vehicle(String vin, Make make, String model, String modelYear, String description, Status status,
 			String soldDate, String createdDate, float price) {
 
 		super();
 
-		this.id = id;
 		this.vin = vin;
 		this.make = make;
 		this.model = model;

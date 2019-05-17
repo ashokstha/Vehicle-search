@@ -12,7 +12,6 @@ import io.ashok.VehicleApplication;
 import io.ashok.util.StringToEnum;
 
 @Service
-
 public class VehicleService {
 
 	private final static Logger logger = Logger.getLogger(VehicleApplication.class);
@@ -65,7 +64,7 @@ public class VehicleService {
 
 	public List<Status> getNextStatus(Status status) {
 		List<Status> lst = new ArrayList<Status>();
-		switch(status) {
+		switch (status) {
 		case PENDING:
 			lst.add(Status.ACTIVE);
 			break;
@@ -77,15 +76,15 @@ public class VehicleService {
 		case SOLD:
 			break;
 		case CANCELLED:
-			break;		
+			break;
 		}
 		return lst;
 	}
 
 	public boolean isValidNextStatus(Status oldStatus, Status newStatus) {
 		List<Status> statuses = this.getNextStatus(oldStatus);
-		for(Status status: statuses) {
-			if(status == newStatus) {
+		for (Status status : statuses) {
+			if (status == newStatus) {
 				return true;
 			}
 		}
