@@ -12,6 +12,7 @@ import io.ashok.VehicleApplication;
 import io.ashok.util.StringToEnum;
 
 @Service
+
 public class VehicleService {
 
 	private final static Logger logger = Logger.getLogger(VehicleApplication.class);
