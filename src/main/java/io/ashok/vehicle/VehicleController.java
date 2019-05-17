@@ -25,13 +25,9 @@ import io.ashok.util.RandomString;
 @Produces(MediaType.APPLICATION_JSON)
 public class VehicleController {
 
-	// private final static Logger logger =
-	// Logger.getLogger(VehicleController.class);
-
 	@Autowired
 	private VehicleService vehicleService;
 
-	//@RequestMapping("/vehicles")
 	@GET
 	public Response getAllVehicles() {
 		List<Vehicle> vehicles = vehicleService.getAllVehicles();
@@ -39,7 +35,6 @@ public class VehicleController {
 		return Response.ok().entity(vehiclesResult).build();
 	}
 
-	// @RequestMapping("/vehicles/{vin}")
 	@GET
 	@Path("/{vin}")
 	public Response findVehicleByVin(@PathParam("vin") String vin) {
@@ -47,7 +42,6 @@ public class VehicleController {
 		return Response.ok().entity(vehicle).build();
 	}
 
-	// @RequestMapping(method = RequestMethod.POST, value = "/vehicles")
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Produces(MediaType.APPLICATION_XML)
@@ -57,7 +51,6 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-	// @RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}")
 	@PUT
 	@Path("/{vin}")
 	public Response modifyVehicle(Vehicle vehicle, @PathParam("vin") String vin) {
@@ -65,8 +58,6 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-	// @RequestMapping(method = RequestMethod.PUT, value =
-	// "/vehicles/{vin}/status/{statusValue}")
 	@PUT
 	@Path("/{vin}/status/{status}")
 	public Response changeVehicleStatus(@PathParam("vin") String vin, @PathParam("status") String status) {
@@ -74,7 +65,6 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-	// @RequestMapping(method = RequestMethod.DELETE, value = "/vehicles/{vin}")
 	@DELETE
 	@Path("/{vin}")
 	public Response deleteVehicle(@PathParam("vin") String vin) {
@@ -82,7 +72,6 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/make/{makeValue}")
 	@GET
 	@Path("/make/{makeValue}")
 	public Response searchVehicleByMake(@PathParam("makeValue") String makeValue) {
@@ -91,10 +80,6 @@ public class VehicleController {
 		return Response.ok().entity(vehiclesResult).build();
 	}
 
-	/*
-	 * Test this model
-	 */
-//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/model/{model}")
 	@GET
 	@Path("/model/{model}")
 	public Response searchVehicleByModel(@PathParam("model") String model) {
@@ -103,10 +88,6 @@ public class VehicleController {
 		return Response.ok().entity(vehiclesResult).build();
 	}
 
-	/*
-	 * Test this model
-	 */
-//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/year/{year}")
 	@GET
 	@Path("/year/{year}")
 	public Response searchVehicleByYear(@PathParam("year") String year) {
@@ -115,10 +96,6 @@ public class VehicleController {
 		return Response.ok().entity(vehiclesResult).build();
 	}
 
-	/*
-	 * Test this model
-	 */
-//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/price/{price}")
 	@GET
 	@Path("/price/{price}")
 	public Response searchVehicleByPrice(@PathParam("price") String price) {
