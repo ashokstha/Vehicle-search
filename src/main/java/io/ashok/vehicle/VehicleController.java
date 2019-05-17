@@ -16,13 +16,11 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.ashok.util.RandomString;
 
 @Controller
-//@Path("/vehicles")
+@Path("/vehicles")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class VehicleController {
@@ -33,8 +31,8 @@ public class VehicleController {
 	@Autowired
 	private VehicleService vehicleService;
 
-	@RequestMapping("/vehicles")
-	//@GET
+	//@RequestMapping("/vehicles")
+	@GET
 	public Response getAllVehicles() {
 		List<Vehicle> vehicles = vehicleService.getAllVehicles();
 		VehicleSearchResult vehiclesResult = new VehicleSearchResult(vehicles);
@@ -84,11 +82,9 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/make/{makeValue}")
-//	@GET
-//	@Path("/make/{makeValue}")
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.APPLICATION_XML)
+//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/make/{makeValue}")
+	@GET
+	@Path("/make/{makeValue}")
 	public Response searchVehicleByMake(@PathParam("makeValue") String makeValue) {
 		List<Vehicle> vehicles = vehicleService.searchByMake(makeValue);
 		VehicleSearchResult vehiclesResult = new VehicleSearchResult(vehicles);
@@ -98,11 +94,9 @@ public class VehicleController {
 	/*
 	 * Test this model
 	 */
-	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/model/{model}")
-//	@GET
-//	@Path("/model/{model}")
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.APPLICATION_XML)
+//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/model/{model}")
+	@GET
+	@Path("/model/{model}")
 	public Response searchVehicleByModel(@PathParam("model") String model) {
 		List<Vehicle> vehicles = vehicleService.searchByModel(model);
 		VehicleSearchResult vehiclesResult = new VehicleSearchResult(vehicles);
@@ -112,11 +106,9 @@ public class VehicleController {
 	/*
 	 * Test this model
 	 */
-	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/year/{year}")
-//	@GET
-//	@Path("/year/{year}")
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.APPLICATION_XML)
+//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/year/{year}")
+	@GET
+	@Path("/year/{year}")
 	public Response searchVehicleByYear(@PathParam("year") String year) {
 		List<Vehicle> vehicles = vehicleService.searchByYear(year);
 		VehicleSearchResult vehiclesResult = new VehicleSearchResult(vehicles);
@@ -126,11 +118,9 @@ public class VehicleController {
 	/*
 	 * Test this model
 	 */
-	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/price/{price}")
-//	@GET
-//	@Path("/price/{price}")
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces(MediaType.APPLICATION_XML)
+//	 @RequestMapping(method=RequestMethod.GET, value="/vehicles/price/{price}")
+	@GET
+	@Path("/price/{price}")
 	public Response searchVehicleByPrice(@PathParam("price") String price) {
 		List<Vehicle> vehicles = vehicleService.searchByPrice(price);
 		VehicleSearchResult vehiclesResult = new VehicleSearchResult(vehicles);
