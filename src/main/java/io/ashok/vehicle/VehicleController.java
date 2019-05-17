@@ -56,7 +56,7 @@ public class VehicleController {
 		return Response.noContent().build();
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{statusValue}")
+	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/status/{statusValue}")
 	public Response changeVehicleStatus(@PathVariable String vin, @PathVariable String statusValue) {
 		vehicleService.updateStatus(vin, statusValue);
 		return Response.noContent().build();

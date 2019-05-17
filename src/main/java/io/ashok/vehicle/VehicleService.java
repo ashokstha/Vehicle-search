@@ -42,7 +42,7 @@ public class VehicleService {
 	public void updateVehicle(Vehicle vehicle, String vin) {
 		Optional<Vehicle> veh = this.getVehicle(vin);
 
-		if (veh.isPresent()) {
+		if (veh.isPresent() && veh.get().getStatus() == Status.PENDING) {
 			vehicle.setVin(vin);
 			vehicleRepository.save(vehicle);
 		}
