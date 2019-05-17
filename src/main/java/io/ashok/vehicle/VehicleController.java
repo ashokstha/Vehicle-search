@@ -28,7 +28,7 @@ public class VehicleController {
 	}
 
 	@RequestMapping("/vehicles/{vin}")
-	public Optional<Vehicle> getVehicle(@PathVariable String vin) {
+	public Optional<Vehicle> findVehicleByVin(@PathVariable String vin) {
 		return vehicleService.getVehicle(vin);
 	}
 
@@ -39,8 +39,8 @@ public class VehicleController {
 	}	
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}")
-	public void updateVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {
-		Optional<Vehicle> veh = this.getVehicle(vin);
+	public void modifyVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {
+		Optional<Vehicle> veh = this.findVehicleByVin(vin);
 		
 		if (veh.isPresent()) {
 			vehicle.setVin(vin);
@@ -49,7 +49,7 @@ public class VehicleController {
 	}
 	
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{statusValue}")
-	public void updateVehicleStatus(@PathVariable String vin,
+	public void changeVehicleStatus(@PathVariable String vin,
 			@PathVariable String statusValue) {
 		
 		Status status = StringToEnum.convertStatus(statusValue);
@@ -58,7 +58,7 @@ public class VehicleController {
 			return;
 		}
 		
-		Optional<Vehicle> vehicle = this.getVehicle(vin);
+		Optional<Vehicle> vehicle = this.findVehicleByVin(vin);
 		if (vehicle.isPresent()) {
 			Vehicle veh = vehicle.get();
 			veh.setStatus(status);
