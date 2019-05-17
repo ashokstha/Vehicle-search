@@ -13,9 +13,9 @@ import io.ashok.util.StringToEnum;
 
 @Service
 public class VehicleService {
-	
+
 	private final static Logger logger = Logger.getLogger(VehicleApplication.class);
-	
+
 	@Autowired
 	private VehicleRepository vehicleRepository;
 
@@ -45,53 +45,81 @@ public class VehicleService {
 		if (veh.isPresent()) {
 			vehicle.setVin(vin);
 			vehicleRepository.save(vehicle);
-		}		
-	}
-
-	/* TODO: test module
-	 * Delete a vehicle if the status is pending state 
-	 * else cannot delete vehicle
-	 */
-	public void deleteVehicle(String vin) {
-		Optional<Vehicle> vehicle = this.getVehicle(vin);
-		if(vehicle.isPresent() && vehicle.get().getStatus() == Status.PENDING) {
-			vehicleRepository.deleteById(vin);
-		}else {
-			logger.debug("Vehicle not found");
 		}
-		
 	}
 
 	/*
-	 * update status
-	 * pending -> active
-	 * active -> pending, sold, canceled
-	 * sold -> no change
-	 * canceled -> no change
+	 * TODO: test module Delete a vehicle if the status is pending state else cannot
+	 * delete vehicle
+	 */
+	public void deleteVehicle(String vin) {
+		Optional<Vehicle> vehicle = this.getVehicle(vin);
+		if (vehicle.isPresent() && vehicle.get().getStatus() == Status.PENDING) {
+			vehicleRepository.deleteById(vin);
+		} else {
+			logger.debug("Vehicle not found");
+		}
+
+	}
+
+	public List<Status> getNextStatus(Status status) {
+		List<Status> lst = new ArrayList<Status>();
+		switch(status) {
+		case PENDING:
+			lst.add(Status.ACTIVE);
+			break;
+		case ACTIVE:
+			lst.add(Status.CANCELLED);
+			lst.add(Status.PENDING);
+			lst.add(Status.SOLD);
+			break;
+		case SOLD:
+			break;
+		case CANCELLED:
+			break;		
+		}
+		return lst;
+	}
+
+	public boolean isValidNextStatus(Status oldStatus, Status newStatus) {
+		List<Status> statuses = this.getNextStatus(oldStatus);
+		for(Status status: statuses) {
+			if(status == newStatus) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/*
+	 * update status pending -> active active -> pending, sold, canceled sold -> no
+	 * change canceled -> no change
 	 */
 	public void updateStatus(String vin, String statusValue) {
 		Status status = StringToEnum.convertStatus(statusValue);
-		if (status==null) {
+		if (status == null) {
 			logger.debug("updateVehicleStatus() => Invalid Status.");
 			return;
 		}
-		
+
 		Optional<Vehicle> vehicle = this.getVehicle(vin);
 		if (vehicle.isPresent()) {
 			Vehicle veh = vehicle.get();
-			veh.setStatus(status);
-			vehicleRepository.save(veh);
+			if (this.isValidNextStatus(veh.getStatus(), status)) {
+				veh.setStatus(status);
+				vehicleRepository.save(veh);
+			}
 		}
 	}
-	
-	
+
 	public List<Vehicle> searchByMake(String makeValue) {
 		Make make = StringToEnum.convertMake(makeValue);
-		if (make==null) {
+		if (make == null) {
 			logger.debug("updateVehicleMake() => Invalid Make.");
 			return null;
 		}
-		
+
 		List<Vehicle> vehicles = new ArrayList<>();
 		vehicleRepository.findAll().forEach(v -> {
 			if (v.getMake() == make) {
