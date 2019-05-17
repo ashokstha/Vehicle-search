@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.ashok.VehicleApplication;
+import io.ashok.util.StringToEnum;
+
 @Service
 public class VehicleService {
-
+	
+	private final static Logger logger = Logger.getLogger(VehicleApplication.class);
+	
 	@Autowired
 	private VehicleRepository vehicleRepository;
 
@@ -23,19 +29,69 @@ public class VehicleService {
 		return vehicleRepository.findById(vin);
 	}
 
+	/*
+	 * Add validations for vehicle before saving
+	 */
 	public void addVehicle(Vehicle vehicle) {
 		vehicleRepository.save(vehicle);
 	}
 
-	public void updateVehicle(Vehicle vehicle) {
-		vehicleRepository.save(vehicle);
+	/*
+	 * TODO: test modules
+	 */
+	public void updateVehicle(Vehicle vehicle, String vin) {
+		Optional<Vehicle> veh = this.getVehicle(vin);
+
+		if (veh.isPresent()) {
+			vehicle.setVin(vin);
+			vehicleRepository.save(vehicle);
+		}		
 	}
 
+	/* TODO: test module
+	 * Delete a vehicle if the status is pending state 
+	 * else cannot delete vehicle
+	 */
 	public void deleteVehicle(String vin) {
-		vehicleRepository.deleteById(vin);
+		Optional<Vehicle> vehicle = this.getVehicle(vin);
+		if(vehicle.isPresent() && vehicle.get().getStatus() == Status.PENDING) {
+			vehicleRepository.deleteById(vin);
+		}else {
+			logger.debug("Vehicle not found");
+		}
+		
 	}
 
-	public List<Vehicle> searchByMake(Make make) {
+	/*
+	 * update status
+	 * pending -> active
+	 * active -> pending, sold, canceled
+	 * sold -> no change
+	 * canceled -> no change
+	 */
+	public void updateStatus(String vin, String statusValue) {
+		Status status = StringToEnum.convertStatus(statusValue);
+		if (status==null) {
+			logger.debug("updateVehicleStatus() => Invalid Status.");
+			return;
+		}
+		
+		Optional<Vehicle> vehicle = this.getVehicle(vin);
+		if (vehicle.isPresent()) {
+			Vehicle veh = vehicle.get();
+			veh.setStatus(status);
+			vehicleRepository.save(veh);
+		}
+	}
+	
+	
+	public List<Vehicle> searchByMake(String makeValue) {
+		Make make = StringToEnum.convertMake(makeValue);
+		if (make==null) {
+			logger.debug("updateVehicleMake() => Invalid Make.");
+			return null;
+		}
+		
 		List<Vehicle> vehicles = new ArrayList<>();
 		vehicleRepository.findAll().forEach(v -> {
 			if (v.getMake() == make) {

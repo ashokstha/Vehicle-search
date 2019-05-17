@@ -3,7 +3,6 @@ package io.ashok.vehicle;
 import java.util.List;
 import java.util.Optional;
 
-import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,12 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.ashok.util.RandomString;
-import io.ashok.util.StringToEnum;
 
 @RestController
 public class VehicleController {
-	
-	private final static Logger logger = Logger.getLogger(VehicleController.class);
+
+	//private final static Logger logger = Logger.getLogger(VehicleController.class);
 
 	@Autowired
 	private VehicleService vehicleService;
@@ -36,39 +34,50 @@ public class VehicleController {
 	public void addVehicle(@RequestBody Vehicle vehicle) {
 		vehicle.setVin(RandomString.getALphaNum(17));
 		vehicleService.addVehicle(vehicle);
-	}	
+	}
 
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}")
-	public void modifyVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {
-		Optional<Vehicle> veh = this.findVehicleByVin(vin);
-		
-		if (veh.isPresent()) {
-			vehicle.setVin(vin);
-			vehicleService.updateVehicle(vehicle);
-		}
+	public void modifyVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {		
+			vehicleService.updateVehicle(vehicle, vin);		
 	}
-	
+
 	@RequestMapping(method = RequestMethod.PUT, value = "/vehicles/{vin}/{statusValue}")
-	public void changeVehicleStatus(@PathVariable String vin,
-			@PathVariable String statusValue) {
-		
-		Status status = StringToEnum.convertStatus(statusValue);
-		if (status==null) {
-			logger.debug("updateVehicleStatus() => Invalid Status.");
-			return;
-		}
-		
-		Optional<Vehicle> vehicle = this.findVehicleByVin(vin);
-		if (vehicle.isPresent()) {
-			Vehicle veh = vehicle.get();
-			veh.setStatus(status);
-			vehicleService.updateVehicle(veh);
-		}
+	public void changeVehicleStatus(@PathVariable String vin, @PathVariable String statusValue) {
+		vehicleService.updateStatus(vin, statusValue);
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/vehicles/{vin}")
 	public void deleteVehicle(@RequestBody Vehicle vehicle, @PathVariable String vin) {
 		vehicleService.deleteVehicle(vin);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/make/{makeValue}")
+	public List<Vehicle> searchVehicleByMake(@PathVariable String makeValue){
+		return vehicleService.searchByMake(makeValue);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/model/{model}")
+	public List<Vehicle> searchVehicleByModel(@PathVariable String model){		
+		return vehicleService.searchByModel(model);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/year/{year}")
+	public List<Vehicle> searchVehicleByYear(@PathVariable String year){		
+		return vehicleService.searchByYear(year);
+	}
+	
+	/*
+	 * Test this model
+	 */
+	@RequestMapping(method=RequestMethod.GET, value="/vehicles/price/{price}")
+	public List<Vehicle> searchVehicleByPrice(@PathVariable String price){		
+		return vehicleService.searchByPrice(price);
 	}
 
 }
